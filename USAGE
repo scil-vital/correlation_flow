@@ -1,0 +1,39 @@
+Pipeline for FINTA MultiBundle
+======================================
+
+USAGE
+
+nextflow run main.nf --input ... [OPTIONAL_ARGUMENTS]
+
+
+DESCRIPTION
+
+    --input=/path/to/[root]              Root folder containing multiple subjects
+
+                                        [root]
+                                        ├── S1
+                                        |   ├── S1_0
+                                        |   |   └── Register_Streamlines
+                                        |   |       └── *.trk
+                                        |   ├── S1_1
+                                        |   ├── S1_2
+                                        |   └── S1_3
+                                        └── S2
+                                            └── *
+
+    --subjects_config                    Path to subject config
+    --bundles_config                     Path to bundle config
+
+    OPTIONAL ARGUMENTS (current value)
+
+    --processes                             The number of parallel processes to launch ($cpu_count).
+                                            Only affects the local scheduler.
+
+    --output_dir                            Directory where to write the final results.
+                                            By default, will be in "./results"
+
+NOTES
+
+Use '-C config_file.config' to specify a non-default configuration file.
+The '-C config_file.config' must be inserted after the nextflow call
+like 'nextflow -C config_file.config run ...'.
