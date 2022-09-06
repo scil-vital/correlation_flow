@@ -1,11 +1,8 @@
-# FINTA pipeline
+# Correlation flow
 ===================
-
-
 
 Requirements
 ------------
-
 
 Singularity/Docker
 -----------

@@ -20,7 +20,7 @@ else{
     processes = params.processes
 }
 
-log.info "Dice Test-Retest"
+log.info "Correlation Flow"
 log.info "==============================================="
 log.info ""
 log.info "Start time: $workflow.start"
