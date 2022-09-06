@@ -66,7 +66,7 @@ subjects
 
 process Compute_Agreements {
     errorStrategy 'ignore'
-    memory '20 GB'
+    memory '2 GB'
 
     input:
     set sid, file(subjects), file(subjects_config), file(bundles_config) from files_for_agreements
