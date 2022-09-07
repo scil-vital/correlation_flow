@@ -2,11 +2,17 @@
 ===================
 
 In your `.bashrc` please do:
-
-
 ```
 export PATH="/path/to/correlation_flow/bin":$PATH
 ```
+
+Create a new virtualenv with `python3.8`:
+```
+virtualenv env --python=python3.8
+pip install -r requirements.txt
+```
+
+
 
 Requirements
 ------------
