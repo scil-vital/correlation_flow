@@ -13,7 +13,7 @@ virtualenv env --python=python3.8
 pip install -r requirements.txt
 ```
 
-Please clone [tractometry_flow-minimal](https://github.com/fdumais/tractometry_flow-minimal) and [registration_flow](https://github.com/scil-vital/registration_flow
+Please clone [tractometry_flow-minimal](https://github.com/fdumais/tractometry_flow-minimal) and [registration_flow](https://github.com/scil-vital/registration_flow)
 
 Launch the command:
 
