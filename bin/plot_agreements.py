@@ -15,7 +15,16 @@ from scilpy.io.utils import (
     add_overwrite_arg,
 )
 
-from tractolearn.tractoio.utils import read_data_from_json_file, save_data_to_json_file
+def save_data_to_json_file(data, fname):
+
+    with open(fname, "w") as f:
+        json.dump(data, f)
+
+
+def read_data_from_json_file(fname):
+
+    with open(fname, "r") as f:
+        return json.load(f)
 
 
 def _build_arg_parser():
