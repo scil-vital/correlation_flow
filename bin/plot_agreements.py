@@ -15,6 +15,7 @@ from scilpy.io.utils import (
     add_overwrite_arg,
 )
 
+
 def save_data_to_json_file(data, fname):
 
     with open(fname, "w") as f:
@@ -28,7 +29,9 @@ def read_data_from_json_file(fname):
 
 
 def _build_arg_parser():
-    p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
+    p = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawTextHelpFormatter
+    )
     p.add_argument("in_jsons", help="JSON file to merge.", nargs="+")
     p.add_argument(
         "out_path",
@@ -102,7 +105,9 @@ def main():
             except Exception as e:
                 print(e)
                 continue
-        fig.update_layout(title=metric.upper(), title_x=0.5, boxgap=0.5, boxgroupgap=0.0)
+        fig.update_layout(
+            title=metric.upper(), title_x=0.5, boxgap=0.5, boxgroupgap=0.0
+        )
         fig.update_yaxes(range=y_lims[metric])
         fig.update_layout()
         plotly.offline.plot(

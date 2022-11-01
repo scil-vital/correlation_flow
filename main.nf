@@ -97,6 +97,7 @@ agreement_results
 
 process Aggregate_Agreements {
     publishDir = params.statsPublishDir
+    cache false
 
     input:
     file(metrics) from all_files_for_agreements
