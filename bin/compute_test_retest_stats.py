@@ -33,10 +33,18 @@ from scilpy.io.utils import (
 
 
 def _build_arg_parser():
-    p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
-    p.add_argument("--length_stats", required=True, help="Tractometry length statistics.")
-    p.add_argument("--volume_stats", required=True, help="Tractometry volume statistics.")
-    p.add_argument("--streamline_count", required=True, help="Streamline count statistics.")
+    p = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawTextHelpFormatter
+    )
+    p.add_argument(
+        "--length_stats", required=True, help="Tractometry length statistics."
+    )
+    p.add_argument(
+        "--volume_stats", required=True, help="Tractometry volume statistics."
+    )
+    p.add_argument(
+        "--streamline_count", required=True, help="Streamline count statistics."
+    )
     p.add_argument(
         "--subjects",
         required=True,
@@ -47,7 +55,9 @@ def _build_arg_parser():
     p.add_argument("-o", "--output", required=True, help="Output directory.")
     p.add_argument("--show", action="store_true", help="Show figures before saving.")
     p.add_argument(
-        "--icc", choices=["ICC11", "ICC21", "ICC31", "ICC1k", "ICC2k", "ICC3k"], help="ICC types"
+        "--icc",
+        choices=["ICC11", "ICC21", "ICC31", "ICC1k", "ICC2k", "ICC3k"],
+        help="ICC types",
     )
 
     add_overwrite_arg(p)
@@ -110,7 +120,8 @@ def main():
     # Compute ICC for every bundle and every metric, for moving|harmonized data
     for bname in bundles:
         for data_name, stats in zip(
-            ["length", "volume", "streamline_count"], [length_stats, volume_stats, streamline_count]
+            ["length", "volume", "streamline_count"],
+            [length_stats, volume_stats, streamline_count],
         ):
             stats_key = {
                 "length": "mean_length",
@@ -134,16 +145,17 @@ def main():
                             {
                                 "subid": [subid] * len(metric_values),
                                 "sess_id": [
-                                    s.replace(f"{subid}_", "") for s in metric_values.keys()
+                                    s.replace(f"{subid}_", "")
+                                    for s in metric_values.keys()
                                 ],
                                 "value": metric_values.values(),
                             }
                         )
                     )
             df = pandas.concat(data, ignore_index=True)
-
             # Compute ICC
             try:
+
                 icc = pingouin.intraclass_corr(
                     data=df,
                     targets="subid",

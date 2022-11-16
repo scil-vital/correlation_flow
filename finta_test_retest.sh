@@ -3,14 +3,14 @@
 set -e
 
 usage() {
-  echo "$(basename "$0") [-i inputs -t tractometry_flow -r registration_flow -c correlation_flow -s subjects -b bundles_config -o output_dir -n processes -a target_anat]" 1>&2
+  echo "$(basename "$0") [-i inputs -t metric_flow -r registration_flow -c correlation_flow -s subjects -b bundles_config -o output_dir -n processes -a target_anat]" 1>&2
   exit 1
 }
 
 while getopts "i:t:r:c:o:s:n:a:b:" args; do
   case "${args}" in
   i) inputs=${OPTARG} ;;
-  t) tractometry_flow=${OPTARG} ;;
+  t) metric_flow=${OPTARG} ;;
   r) registration_flow=${OPTARG} ;;
   c) correlation_flow=${OPTARG} ;;
   o) output=${OPTARG} ;;
@@ -24,7 +24,7 @@ done
 shift $((OPTIND - 1))
 
 if [ -z "$inputs" ] ||
-  [ -z "$tractometry_flow" ] ||
+  [ -z "$metric_flow" ] ||
   [ -z "$registration_flow" ] ||
   [ -z "$correlation_flow" ] ||
   [ -z "$subjects" ] ||
@@ -35,7 +35,7 @@ if [ -z "$inputs" ] ||
   usage
 else
   echo "Inputs: ${inputs}"
-  echo "Tractometry_flow: ${tractometry_flow}"
+  echo "metric_flow: ${metric_flow}"
   echo "Registration_flow: ${registration_flow}"
   echo "Correlation_flow: ${correlation_flow}"
   echo "Subjects: ${subjects}"
@@ -45,21 +45,21 @@ else
   echo "Target_anat: ${target_anat}"
 fi
 
-tractometry_dir=$output/tractometry_flow
+metric_dir=$output/metric_flow
 registration_dir=$output/registration_flow
 correlation_dir=$output/correlation_flow
 
-mkdir -p "$tractometry_dir"
+mkdir -p "$metric_dir"
 mkdir -p "$registration_dir"
 mkdir -p "$correlation_dir"
 
-run_tractometryflow() {
+run_metricflow() {
   local suffix=$1
   local input=$2
 
-  # Run tractometry-flow
-  nextflow run "$tractometry_flow"/main.nf -w "$tractometry_dir"/work_"$suffix" --output_dir "$tractometry_dir"/output_"$suffix" \
-    --input "$input" -with-report "$tractometry_dir"/report_"${suffix}".html --use_provided_centroids false -resume --processes $processes \
+  # Run metric-flow
+  nextflow run "$metric_flow"/main.nf -w "$metric_dir"/work_"$suffix" --output_dir "$metric_dir"/output_"$suffix" \
+    --input "$input" -with-report "$metric_dir"/report_"${suffix}".html --use_provided_centroids false -resume --processes $processes \
     --min_streamline_count 50000
 }
 
@@ -67,7 +67,7 @@ run_registrationflow() {
   local suffix=$1
   local input=$2
 
-  # Run tractometry-flow
+  # Run metric-flow
   nextflow run "$registration_flow"/main.nf -w "$registration_dir"/work_"$suffix" --output_dir "$registration_dir"/output_"$suffix" \
     --input "$input" -resume --processes $processes --target_anat ${target_anat} --resampling -1
 }
@@ -76,18 +76,18 @@ run_correlationflow() {
   local suffix=$1
   local input=$2
 
-  # Run tractometry-flow
+  # Run metric-flow
 
   nextflow run "$correlation_flow"/main.nf -w "$correlation_dir"/work_"$suffix" --output_dir "$correlation_dir"/output_"$suffix" \
     --input "$input" --subjects_config $subjects --bundles_config $bundles_config -resume --processes $processes
 }
 
-run_tractometryflow "tractometry" "$inputs"
+run_metricflow "metric" "$inputs"
 
 for icc in ICC11 ICC21 ICC31 ICC1k ICC2k ICC3k; do
-  compute_test_retest_stats.py --length_stats "$tractometry_dir"/output_tractometry/Statistics/length_stats.json \
-    --volume_stats "$tractometry_dir"/output_tractometry/Statistics/volumes.json \
-    --streamline_count "$tractometry_dir"/output_tractometry/Statistics/streamline_count.json \
+  compute_test_retest_stats.py --length_stats "$metric_dir"/output_metric/Statistics/length_stats.json \
+    --volume_stats "$metric_dir"/output_metric/Statistics/volumes.json \
+    --streamline_count "$metric_dir"/output_metric/Statistics/streamline_count.json \
     --subject $subjects -o $output/test_retest_${icc} -f --icc "${icc}"
 done
 
